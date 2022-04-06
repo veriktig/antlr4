@@ -99,8 +99,6 @@ public class LexerATNSimulator extends ATNSimulator {
 
 	protected final SimState prevAccept = new SimState();
 
-	public static int match_calls = 0;
-
 	public LexerATNSimulator(ATN atn, DFA[] decisionToDFA,
 							 PredictionContextCache sharedContextCache)
 	{
@@ -125,7 +123,6 @@ public class LexerATNSimulator extends ATNSimulator {
 	}
 
 	public int match(CharStream input, int mode) {
-		match_calls++;
 		this.mode = mode;
 		int mark = input.mark();
 		try {

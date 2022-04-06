@@ -47,7 +47,7 @@ void LexerATNSimulator::SimState::InitializeInstanceFields() {
   charPos = INVALID_INDEX;
 }
 
-int LexerATNSimulator::match_calls = 0;
+std::atomic<int> LexerATNSimulator::match_calls(0);
 
 
 LexerATNSimulator::LexerATNSimulator(const ATN &atn, std::vector<dfa::DFA> &decisionToDFA,
@@ -69,7 +69,7 @@ void LexerATNSimulator::copyState(LexerATNSimulator *simulator) {
 }
 
 size_t LexerATNSimulator::match(CharStream *input, size_t mode) {
-  match_calls++;
+  match_calls.fetch_add(1, std::memory_order_relaxed);
   _mode = mode;
   ssize_t mark = input->mark();
 
@@ -422,7 +422,7 @@ Ref<LexerATNConfig> LexerATNSimulator::getEpsilonTarget(CharStream *input, const
       if (config->context == nullptr|| config->context->hasEmptyPath()) {
         // execute actions anywhere in the start rule for a token.
         //
-        // TO_DO: if the entry rule is invoked recursively, some
+        // TODO: if the entry rule is invoked recursively, some
         // actions may be executed during the recursive call. The
         // problem can appear when hasEmptyPath() is true but
         // isEmpty() is false. In this case, the config needs to be

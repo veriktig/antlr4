@@ -941,7 +941,7 @@ open class Parser: Recognizer<ParserATNSimulator> {
 
     public func getRuleInvocationStack(_ p: RuleContext?) -> [String] {
         var p = p
-        var ruleNames = getRuleNames()
+        let ruleNames = getRuleNames()
         var stack = [String]()
         while let pWrap = p {
             // compute what follows who invoked us
@@ -1025,8 +1025,8 @@ open class Parser: Recognizer<ParserATNSimulator> {
             removeParseListener(_tracer)
             _tracer = nil
         } else {
-            if _tracer != nil {
-                removeParseListener(_tracer!)
+            if let _tracer = _tracer {
+                removeParseListener(_tracer)
             } else {
                 _tracer = TraceListener(self)
             }
