@@ -1,17 +1,38 @@
 # ANTLR v4
 
-[![Java 7+](https://img.shields.io/badge/java-7+-4c7e9f.svg)](http://java.oracle.com)
+[![Java 11+](https://img.shields.io/badge/java-11+-4c7e9f.svg)](http://java.oracle.com)
 [![License](https://img.shields.io/badge/license-BSD-blue.svg)](https://raw.githubusercontent.com/antlr/antlr4/master/LICENSE.txt)
-
 
 **ANTLR** (ANother Tool for Language Recognition) is a powerful parser generator for reading, processing, executing, or translating structured text or binary files. It's widely used to build languages, tools, and frameworks. From a grammar, ANTLR generates a parser that can build parse trees and also generates a listener interface (or visitor) that makes it easy to respond to the recognition of phrases of interest.
 
-**Build status**
+**Dev branch build status**
 
-[![Github CI Build Status (MacOSX)](https://img.shields.io/github/workflow/status/antlr/antlr4/MacOSX?label=MacOSX)](https://github.com/antlr/antlr4/actions) 
+[![MacOSX, Windows, Linux](https://github.com/antlr/antlr4/actions/workflows/hosted.yml/badge.svg)](https://github.com/antlr/antlr4/actions/workflows/hosted.yml) (github actions)
+
+<!--
+* [![Windows](https://github.com/antlr/antlr4/actions/workflows/windows.yml/badge.svg?branch=dev)](https://github.com/antlr/antlr4/actions/workflows/windows.yml) (github actions)
+
+* [![Circle CI Build Status (Linux)](https://img.shields.io/circleci/build/gh/antlr/antlr4/master?label=Linux)](https://app.circleci.com/pipelines/github/antlr/antlr4) (CircleCI)
+
 [![AppVeyor CI Build Status (Windows)](https://img.shields.io/appveyor/build/parrt/antlr4?label=Windows)](https://ci.appveyor.com/project/parrt/antlr4) 
-[![Circle CI Build Status (Linux)](https://img.shields.io/circleci/build/gh/antlr/antlr4/master?label=Linux)](https://app.circleci.com/pipelines/github/antlr/antlr4)
 [![Travis-CI Build Status (Swift-Linux)](https://img.shields.io/travis/antlr/antlr4.svg?label=Linux-Swift&branch=master)](https://travis-ci.com/github/antlr/antlr4)
+-->
+
+
+## Versioning
+
+ANTLR 4 supports 10 target languages
+(Cpp, CSharp, Dart, Java, JavaScript, PHP, Python3, Swift, TypeScript, Go),
+and ensuring consistency across these targets is a unique and highly valuable feature.
+To ensure proper support of this feature, each release of ANTLR is a complete release of the tool and the 10 runtimes, all with the same version.
+As such, ANTLR versioning does not strictly follow semver semantics:
+
+* a component may be released with the latest version number even though nothing has changed within that component since the previous release
+* major version is bumped only when ANTLR is rewritten for a totally new "generation", such as ANTLR3 -> ANTLR4 (LL(\*) -> ALL(\*) parsing)
+* minor version updates may include minor breaking changes, the policy is to regenerate parsers with every release (4.11 -> 4.12)
+* backwards compatibility is only guaranteed for patch version bumps (4.11.1 -> 4.11.2)
+
+If you use a semver verifier in your CI, you probably want to apply special rules for ANTLR, such as treating minor change as a major change.
 
 ## Repo branch structure
 
@@ -19,13 +40,13 @@ The default branch for this repo is [`master`](https://github.com/antlr/antlr4/t
 
 <img src="doc/images/new-antlr-branches.png" width="500">
 
-Targets such as Go that pull directly from the repository can use the default `master` branch but can also pull from the active `dev` branch:
+The Go target now has its own dedicated repo:
 
 ```bash
-$ go get github.com/antlr/antlr4/runtime/Go/antlr@dev
+$ go get github.com/antlr4-go/antlr
 ```
-
-
+**Note**
+The dedicated Go repo is for `go get` and `import` only. Go runtime development is still performed in the main `antlr/antlr4` repo. 
 
 ## Authors and major contributors
 
@@ -33,7 +54,7 @@ $ go get github.com/antlr/antlr4/runtime/Go/antlr@dev
 ANTLR project lead and supreme dictator for life
 [University of San Francisco](http://www.usfca.edu/)
 * [Sam Harwell](http://tunnelvisionlabs.com/) (Tool co-author, Java and original C# target)
-* [Eric Vergnaud](https://github.com/ericvergnaud) (Javascript, Python2, Python3 targets and maintenance of C# target)
+* [Eric Vergnaud](https://github.com/ericvergnaud) (Javascript, TypeScript, Python2, Python3 targets and maintenance of C# target)
 * [Peter Boyer](https://github.com/pboyer) (Go target)
 * [Mike Lischke](http://www.soft-gems.net/) (C++ completed target)
 * Dan McLaughlin (C++ initial target)
@@ -45,6 +66,8 @@ ANTLR project lead and supreme dictator for life
 * [Lingyu Li](https://github.com/lingyv-li) (Dart target)
 * [Ivan Kochurkin](https://github.com/KvanTTT) has made major contributions to overall quality, error handling, and Target performance.
 * [Justin King](https://github.com/jcking) has done a huge amount of work across multiple targets, but especially for C++.
+* [Ken Domino](https://github.com/kaby76) has a knack for finding bugs/issues and analysis; also a major contributor on the [grammars-v4 repo](https://github.com/antlr/grammars-v4).
+* [Jim Idle](https://github.com/jimidle) has contributed to previous versions of ANTLR and recently jumped back in to solve a major problem with the Go target.
 
 
 ## Useful information
@@ -54,7 +77,12 @@ ANTLR project lead and supreme dictator for life
 * [Official site](http://www.antlr.org/)
 * [Documentation](https://github.com/antlr/antlr4/blob/master/doc/index.md)
 * [FAQ](https://github.com/antlr/antlr4/blob/master/doc/faq/index.md)
-* [ANTLR code generation targets](https://github.com/antlr/antlr4/blob/master/doc/targets.md)<br>(Currently: Java, C#, Python2|3, JavaScript, Go, C++, Swift, Dart, PHP)
+* [ANTLR code generation targets](https://github.com/antlr/antlr4/blob/master/doc/targets.md)<br>(Currently: Java, C#, Python3, JavaScript, TypeScript, Go, C++, Swift, Dart, PHP)
+* _Note: As of version 4.14, we are dropping support for Python 2. We love the Python
+community, but Python 2 support was officially halted in Jan 2020. More recently,
+GiHub also dropped support for Python 2, which has made it impossible for us to
+maintain a consistent level of quality across targets (we use GitHub for our CI).
+Long live Python 3!_
 * [Java API](http://www.antlr.org/api/Java/index.html)
 * [ANTLR v3](http://www.antlr3.org/)
 * [v3 to v4 Migration, differences](https://github.com/antlr/antlr4/blob/master/doc/faq/general.md)
